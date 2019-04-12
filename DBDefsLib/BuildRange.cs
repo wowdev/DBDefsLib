@@ -7,10 +7,18 @@ namespace DBDefsLib
         public Build minBuild;
         public Build maxBuild;
 
+        /// <summary>
+        /// Serialization requirement.
+        /// </summary>
+        private BuildRange() { }
+
         public BuildRange(Build minBuild, Build maxBuild)
         {
             this.minBuild = minBuild;
             this.maxBuild = maxBuild;
+
+            if (minBuild.expansion != maxBuild.expansion)
+                throw new Exception("Expansion differs across build range. This is not allowed!");
         }
 
         public BuildRange(string buildRange)
@@ -18,6 +26,9 @@ namespace DBDefsLib
             var split = buildRange.Split('-');
             this.minBuild = new Build(split[0]);
             this.maxBuild = new Build(split[1]);
+
+            if (minBuild.expansion != maxBuild.expansion)
+                throw new Exception("Expansion differs across build range. This is not allowed!");
         }
 
         public override string ToString()
@@ -27,7 +38,13 @@ namespace DBDefsLib
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as BuildRange);
+            var buildRange = obj as BuildRange;
+            if (buildRange == null)
+            {
+                return false;
+            }
+
+            return Equals(buildRange);
         }
 
         public bool Equals(BuildRange buildRange)

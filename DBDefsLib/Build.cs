@@ -9,6 +9,11 @@ namespace DBDefsLib
         public short minor;
         public uint build;
 
+        /// <summary>
+        /// Serialization requirement.
+        /// </summary>
+        private Build() { }
+
         public Build(string buildString)
         {
             var split = buildString.Split('.');
@@ -26,7 +31,13 @@ namespace DBDefsLib
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Build);
+            var build = obj as Build;
+            if (build == null)
+            {
+                return false;
+            }
+
+            return Equals(build);
         }
 
         public override int GetHashCode()

@@ -38,7 +38,7 @@ namespace DBDefsLib
                     var validTypes = new List<string> { "uint", "int", "float", "string", "locstring" };
 
                     // Check if line has a space in case someone didn't assign a type to a column name
-                    if (!line.Contains(" "))
+                    if(!line.Contains(" "))
                     {
                         throw new Exception("Line " + line + " in file " + Path.GetFileNameWithoutExtension(file) + " does not contain a space between type and column name!");
                     }
@@ -64,7 +64,7 @@ namespace DBDefsLib
                         var foreignKey = line.Substring(line.IndexOf('<') + 1, line.IndexOf('>') - line.IndexOf('<') - 1).Split(new string[] { "::" }, StringSplitOptions.None);
 
                         // There should only be 2 values in foreignKey (table and col)
-                        if (foreignKey.Length != 2)
+                        if(foreignKey.Length != 2)
                         {
                             throw new Exception("Invalid foreign key length: " + foreignKey.Length);
                         }
@@ -78,7 +78,7 @@ namespace DBDefsLib
                     /* NAME READING */
                     var name = "";
                     // If there's only one space on the line at the same locaiton as the first one, assume a simple line like "uint ID", this can be better
-                    if (line.LastIndexOf(' ') == line.IndexOf(' '))
+                    if(line.LastIndexOf(' ') == line.IndexOf(' '))
                     {
                         name = line.Substring(line.IndexOf(' ') + 1);
                     }
@@ -138,7 +138,7 @@ namespace DBDefsLib
             var builds = new List<Build>();
             var buildRanges = new List<BuildRange>();
 
-            for (var i = lineNumber; i < lines.Length; i++)
+            for(var i = lineNumber; i < lines.Length; i++)
             {
                 var line = lines[i];
 
@@ -162,8 +162,7 @@ namespace DBDefsLib
                     buildRanges = new List<BuildRange>();
                 }
 
-                if (line.StartsWith("LAYOUT"))
-                {
+                if (line.StartsWith("LAYOUT")){
                     var splitLayoutHashes = line.Remove(0, 7).Split(new string[] { ", " }, StringSplitOptions.None);
                     layoutHashes.AddRange(splitLayoutHashes);
                 }
@@ -171,7 +170,7 @@ namespace DBDefsLib
                 if (line.StartsWith("BUILD"))
                 {
                     var splitBuilds = line.Remove(0, 6).Split(new string[] { ", " }, StringSplitOptions.None);
-                    foreach (var splitBuild in splitBuilds)
+                    foreach(var splitBuild in splitBuilds)
                     {
                         if (splitBuild.Contains("-"))
                         {
@@ -180,8 +179,7 @@ namespace DBDefsLib
                                 new BuildRange(new Build(splitRange[0]), new Build(splitRange[1]))
                             );
                         }
-                        else
-                        {
+                        else{
                             var build = new Build(splitBuild);
                             builds.Add(build);
                         }
@@ -265,8 +263,7 @@ namespace DBDefsLib
                     else
                     {
                         // Temporary unsigned format update conversion code
-                        if (columnDefinitionDictionary[definition.name].type == "uint")
-                        {
+                        if(columnDefinitionDictionary[definition.name].type == "uint") {
                             definition.isSigned = false;
                         }
                     }
@@ -311,7 +308,7 @@ namespace DBDefsLib
                         {
                             if (column.Key == definition.name)
                             {
-                                if (definition.name == "ID" && !definition.isID)
+                                if(definition.name == "ID" && !definition.isID)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Yellow;
                                     Console.WriteLine(Path.GetFileNameWithoutExtension(file) + "." + definition.name + " is called ID and might be a primary key.");
@@ -371,10 +368,14 @@ namespace DBDefsLib
                             throw new Exception("Version definition " + definition.name + " is an int/uint but is missing size in file " + file + "!");
                         }
 
-                        if ((columnDefinitionDictionary[definition.name].type != "int" && columnDefinitionDictionary[definition.name].type != "uint") && definition.size != 0)
-                        {
+                        if ((columnDefinitionDictionary[definition.name].type != "int" && columnDefinitionDictionary[definition.name].type != "uint") && definition.size != 0){
                             throw new Exception("Version definition " + definition.name + " is NOT an int/uint but has size in file " + file + "!");
                         }
+                    }
+
+                    if(version.definitions.GroupBy(n => n.name).Any(c => c.Count() > 1))
+                    {
+                        throw new Exception("Version definitions contains multiple columns of the same name!");
                     }
                 }
 
@@ -405,8 +406,7 @@ namespace DBDefsLib
 
                         if (versionDefinitions[i].definitions.SequenceEqual(versionDefinitions[j].definitions))
                         {
-                            if (versionDefinitions[i].layoutHashes.Length > 0 && versionDefinitions[j].layoutHashes.Length > 0 && !versionDefinitions[i].layoutHashes.SequenceEqual(versionDefinitions[j].layoutHashes))
-                            {
+                            if (versionDefinitions[i].layoutHashes.Length > 0 && versionDefinitions[j].layoutHashes.Length > 0 && !versionDefinitions[i].layoutHashes.SequenceEqual(versionDefinitions[j].layoutHashes)){
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.WriteLine(Path.GetFileNameWithoutExtension(file) + " has 2 identical version definitions (" + (i + 1) + " and " + (j + 1) + ") but two different layouthashes, ignoring...");
                                 Console.ResetColor();
