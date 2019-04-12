@@ -26,7 +26,7 @@ namespace DBDefsLib
 
             var cleaned = col;
 
-            foreach(var thingToUpperCase in thingsToUpperCase)
+            foreach (var thingToUpperCase in thingsToUpperCase)
             {
                 if (filteredOut.Contains(col))
                 {

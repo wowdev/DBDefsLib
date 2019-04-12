@@ -82,9 +82,9 @@ namespace DBDefsLib
         {
             unionedRange = null;
 
-            if (buildRange.Contains(minBuild) || 
-                buildRange.Contains(maxBuild) || 
-                Contains(buildRange.minBuild) || 
+            if (buildRange.Contains(minBuild) ||
+                buildRange.Contains(maxBuild) ||
+                Contains(buildRange.minBuild) ||
                 Contains(buildRange.maxBuild))
             {
                 Build min = minBuild, max = maxBuild;
