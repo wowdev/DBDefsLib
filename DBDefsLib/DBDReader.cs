@@ -14,6 +14,10 @@ namespace DBDefsLib
             var columnDefinitionDictionary = new Dictionary<string, ColumnDefinition>();
 
             var lines = reader.ReadLines();
+
+            reader.Close();
+            reader.Dispose();
+
             var lineNumber = 0;
 
             if (lines[0].StartsWith("COLUMNS"))
