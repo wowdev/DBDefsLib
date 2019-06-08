@@ -439,7 +439,7 @@ namespace DBDefsLib
                 throw new FileNotFoundException("Unable to find definitions file: " + file);
             }
 
-            var stream = File.Open(file, FileMode.Open);
+            var stream = File.Open(file, FileMode.Open, FileAccess.Read);
 
             return Read(stream, validate);
         }
